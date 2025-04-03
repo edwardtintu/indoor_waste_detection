@@ -1,4 +1,5 @@
-streamlit
 torch
 torchvision
+streamlit
+gdown  # ✅ Required for Google Drive model download
 Pillow

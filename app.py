@@ -3,9 +3,24 @@ import torch
 import torchvision.transforms as transforms
 import torchvision.models as models
 from PIL import Image
+import os
+import gdown  # ✅ Used to download from Google Drive
 
 # ✅ Define class labels
 class_labels = ["cardboard", "metal", "paper", "plastic", "trash"]
+
+# ✅ Google Drive file ID (replace with your actual file ID)
+file_id = "1fIs9V0Ouiwpsfrrfihp6aAOdzYLuxpB"  # Change this!
+
+# ✅ Model file name
+model_path = "waste_detection_model_cpu.pth"
+
+# 🔄 Download model if not available
+if not os.path.exists(model_path):
+    st.write("📥 Downloading model from Google Drive...")
+    url = f"https://drive.google.com/uc?id={file_id}"
+    gdown.download(url, model_path, quiet=False)
+    st.write("✅ Model downloaded successfully!")
 
 # ✅ Load the model
 st.write("🔄 Loading model...")
@@ -16,7 +31,7 @@ try:
     model.fc = torch.nn.Linear(num_features, len(class_labels))  # Set number of classes
 
     # ✅ Load only the state_dict (weights)
-    model.load_state_dict(torch.load("waste_detection_model_cpu.pth", map_location=torch.device("cpu")))
+    model.load_state_dict(torch.load(model_path, map_location=torch.device("cpu")))
     model.eval()  # Set to evaluation mode
     st.write("✅ Model loaded successfully!")
 except Exception as e:
